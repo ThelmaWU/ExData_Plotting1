@@ -1,0 +1,76 @@
+---
+title: "COURSE4-ASSIGNMENT1"
+output: html_document
+---
+
+```{r}
+require(rio)
+require(ggplot2)
+require(dplyr)
+```
+
+
+Load the data
+```{r, warning=FALSE}
+EPC<-import("Electricpowerconsumption.txt")
+
+```
+```{r}
+EPC<-EPC%>%
+filter(EPC$Date %in% c("1/2/2007","2/2/2007"))
+
+```
+
+
+Graph 1
+```{r}
+
+png("plot1.png", width=480, height=480)
+
+hist(as.numeric(EPC$Global_active_power), col="red", main="Global Active Power", xlab="Global Active Power (kilowatts)")
+
+dev.off()
+
+```
+
+Graph 2
+```{r}
+require(lubridate)
+
+
+datetime <- strptime(paste(EPC$Date, EPC$Time, sep=" "), "%d/%m/%Y %H:%M:%S")  
+png("plot2.png",height=480,width=480)
+plot(datetime, as.numeric(EPC$Global_active_power), type="l", xlab="", ylab="Global Active Power (kilowatts)") 
+dev.off()
+```
+
+Graph 3
+```{r}
+png("plot3.png",height = 480,width=480)
+
+plot(datetime, as.numeric(EPC$Sub_metering_1), type="l",ylab="Energy Submetering", xlab="")+
+lines(datetime, as.numeric(EPC$Sub_metering_2), type="l", col="red") + lines(datetime,as.numeric(EPC$Sub_metering_3),col="blue",type="l") 
+  
+
+dev.off()
+
+```
+
+
+
+Graph 4
+```{r}
+
+png("plot4.png",height = 480,width=480)
+par(mfrow=c(2,2))
+plot(datetime, as.numeric(EPC$Global_active_power), type="l", xlab="", ylab="Global Active Power (kilowatts)") 
+
+plot(datetime, as.numeric(EPC$Voltage), type="l", xlab="datetime", ylab="Voltage")
+
+plot(datetime, as.numeric(EPC$Sub_metering_1), type="l",ylab="Energy Submetering", xlab="") +
+lines(datetime, as.numeric(EPC$Sub_metering_2), type="l", col="red") + lines(datetime,as.numeric(EPC$Sub_metering_3),col="blue",type="l")
+ 
+plot(datetime, as.numeric(EPC$Global_reactive_power), type="l", xlab="", ylab="Global Reactive Power (kilowatts)") 
+dev.off()
+```
+
